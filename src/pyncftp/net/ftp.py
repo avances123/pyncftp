@@ -12,10 +12,10 @@ class FtpTransfer(object):
     '''
 
     def start_conn(self):
-        conn = ftplib.FTP('avances123.dyndns.org')
+        conn = ftplib.FTP('localhost')
         conn.debug(1)  # See server messages
         conn.set_pasv(False) # Control pasv connections
-        conn.login('fabio', 'fabiete123')
+        conn.login('farios', 'farios')
         return conn
  
     def kill_conn(self  ):
