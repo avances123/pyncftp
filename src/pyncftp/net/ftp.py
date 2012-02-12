@@ -21,12 +21,16 @@ class FtpTransfer(object):
     def kill_conn(self  ):
         self.conn.quit()
     
+    def rename_file(self):
+        pass
+    
+    def delete_file(self):
+        pass   
+    
     def upload_file(self, filename):
         f = open(filename,"rb")
         self.conn.storbinary('STOR ' + filename, f)  # basename and filehandler
         f.close()
-
-    
 
     def __init__(self):
         '''
