@@ -6,20 +6,43 @@ Created on 12/02/2012
 
 from db import config, queue
 from net import ftp
-from multiprocessing import Pool
+from multiprocessing import Queue,Process ,current_process,log_to_stderr
+
+import logging
+import random
+import time
+    
+logger = log_to_stderr()
+logger.setLevel(logging.INFO)
+NUMWORKERS = 4
 
 
-def f(x):
-    print x   
+def worker(tasks):
+    
+    t = tasks.get()
+    if t[0] == 1:
+        time.sleep(10)
+    else:
+        time.sleep(2)
+    print current_process().name,t
    
 if __name__ == '__main__':
     configdb = config.ConfigDB()
     rules = configdb.rules
-    
+        
     x = queue.TransferQueue()
-    task_queue = x.transfer_queue
-    print task_queue.get()
-    #pool = Pool(processes=4)              # start 4 worker processes
-    #result = pool.apply_async(f, [task_queue])    # evaluate "f(10)" asynchronously
-    #print result.get()           # prints "100" unless your computer is *very* slow
-    #print pool.map(f, range(10))          # prints "[0, 1, 4,..., 81]"
+    task_list = x.transfer_list
+    
+    q = Queue()
+    
+    workers = [ Process(target=worker, args=(q,)) for i in range(NUMWORKERS) ]
+    
+    for each in workers:
+        each.start()
+    for i in task_list:
+        q.put(i)
+    for each in workers:
+        each.join()       
+        
+
+        
