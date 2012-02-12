@@ -46,26 +46,29 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: configuracion; Type: TABLE; Schema: public; Owner: fabio; Tablespace: 
+-- Name: config; Type: TABLE; Schema: public; Owner: fabio; Tablespace: 
 --
 
-CREATE TABLE configuracion (
+CREATE TABLE config (
     id integer NOT NULL,
     customer character varying,
     comment character varying,
     path character varying DEFAULT '/'::character varying,
     host character varying NOT NULL,
-    type character varying DEFAULT 'ftp'::character varying NOT NULL
+    conn_type character varying DEFAULT 'ftp'::character varying NOT NULL,
+    type character varying NOT NULL,
+    login character varying,
+    pass character varying
 );
 
 
-ALTER TABLE public.configuracion OWNER TO fabio;
+ALTER TABLE public.config OWNER TO fabio;
 
 --
--- Name: TABLE configuracion; Type: COMMENT; Schema: public; Owner: fabio
+-- Name: TABLE config; Type: COMMENT; Schema: public; Owner: fabio
 --
 
-COMMENT ON TABLE configuracion IS 'Configuracion de clientes y ruta';
+COMMENT ON TABLE config IS 'Configuracion de clientes y ruta';
 
 
 --
@@ -86,7 +89,7 @@ ALTER TABLE public.configuracion_id_seq OWNER TO fabio;
 -- Name: configuracion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: fabio
 --
 
-ALTER SEQUENCE configuracion_id_seq OWNED BY configuracion.id;
+ALTER SEQUENCE configuracion_id_seq OWNED BY config.id;
 
 
 --
@@ -100,14 +103,14 @@ SELECT pg_catalog.setval('configuracion_id_seq', 1, false);
 -- Name: id; Type: DEFAULT; Schema: public; Owner: fabio
 --
 
-ALTER TABLE configuracion ALTER COLUMN id SET DEFAULT nextval('configuracion_id_seq'::regclass);
+ALTER TABLE config ALTER COLUMN id SET DEFAULT nextval('configuracion_id_seq'::regclass);
 
 
 --
--- Data for Name: configuracion; Type: TABLE DATA; Schema: public; Owner: fabio
+-- Data for Name: config; Type: TABLE DATA; Schema: public; Owner: fabio
 --
 
-COPY configuracion (id, customer, comment, path, host, type) FROM stdin;
+COPY config (id, customer, comment, path, host, conn_type, type, login, pass) FROM stdin;
 \.
 
 
@@ -115,7 +118,7 @@ COPY configuracion (id, customer, comment, path, host, type) FROM stdin;
 -- Name: configuracion_pkey; Type: CONSTRAINT; Schema: public; Owner: fabio; Tablespace: 
 --
 
-ALTER TABLE ONLY configuracion
+ALTER TABLE ONLY config
     ADD CONSTRAINT configuracion_pkey PRIMARY KEY (id);
 
 
