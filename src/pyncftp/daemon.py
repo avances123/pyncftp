@@ -21,28 +21,33 @@ def worker(tasks):
     
     t = tasks.get()
     if t[0] == 1:
-        time.sleep(10)
+        time.sleep(1)
     else:
         time.sleep(2)
     print current_process().name,t
    
 if __name__ == '__main__':
-    configdb = config.ConfigDB()
-    rules = configdb.rules
-        
+    rules = config.ConfigDB().rules
+    #rules = configdb.rules
+    
     x = queue.TransferQueue()
-    task_list = x.transfer_list
-    
+    x.fillRandomQueue(10)
     q = Queue()
-    
-    workers = [ Process(target=worker, args=(q,)) for i in range(NUMWORKERS) ]
-    
-    for each in workers:
-        each.start()
-    for i in task_list:
+    for i in x.refreshQueue():
         q.put(i)
-    for each in workers:
-        each.join()       
+    logger.error("Tamanio: %s" % q.qsize())     
+    while True:
+        while not q.empty():
+            workers = [ Process(target=worker, args=(q,)) for i in range(NUMWORKERS) ]
+            for each in workers:
+                each.start()
+            for each in workers:
+                each.join(5)                       
+            
+        logger.error("Tamanio lista %s" % len(x.refreshQueue()))
+        time.sleep(2)
         
-
+        for i in x.refreshQueue():
+            q.put(i)
+        logger.error("Tamanio Cola: %s" % q.qsize())
         
