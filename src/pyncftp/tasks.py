@@ -14,9 +14,14 @@ def enviaFTP():
     	logger.warning("Haciendo una subida de FTP que dura %s segundos" % tiempo)
     	time.sleep(tiempo)
     	#return choice(resultados)
-    	raise ftplib.error_perm
-    except Exception,e:
-	logger.error(e)
+	if tiempo >= 10:
+	    raise ftplib.error_perm
+
+    except Exception,exc:
+	logger.warning("Reintentando")
+	enviaFTP.retry(exc=exc)
+
+	#logger.error(e)
 
 
 @task
@@ -30,5 +35,7 @@ def creaTarea():
     datos['remote-dir'] = ''.join(random.sample(s,len(s)))
     f = open('tarea.txt',"w")
     json.dump(datos,f)
-    return f.close()
+    logger = creaTarea.get_logger()
+    logger.info("Creando tarea")
+    f.close()
 
