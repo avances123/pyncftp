@@ -8,20 +8,16 @@ import json
 @task(default_retry_delay=6,max_retries=6)
 def enviaFTP(): # Segundos
     try:
-    	resultados = [0,1,2,3,4,5,6]
+    	resultados = [None,ftplib.error_perm]
     	tiempo = random.random()*10
     	logger = enviaFTP.get_logger()
     	logger.warning("Haciendo una subida de FTP que dura %s segundos" % tiempo)
     	time.sleep(tiempo)
-    	#return choice(resultados)
-	if tiempo >= 2:
-	    raise ftplib.error_perm
-	    #raise Exception
+    	raise choice(resultados)
 
     except Exception,exc:
-	logger.warning("Reintentando")
-	enviaFTP.retry(exc=exc)
-	#logger.error(e)
+	    logger.warning("Reintentando")
+	    enviaFTP.retry(exc=exc)
 
 
 @task
