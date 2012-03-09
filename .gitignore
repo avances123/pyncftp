@@ -1,1 +1,2 @@
-src/pyncftp/net/test.txt
+celeryconfig.py
+*.pyc

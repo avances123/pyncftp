@@ -5,7 +5,7 @@ from random import choice
 import ftplib
 import json
 
-@task(default_retry_delay=6,max_retries=2)
+@task(default_retry_delay=6,max_retries=6)
 def enviaFTP(): # Segundos
     try:
     	resultados = [0,1,2,3,4,5,6]
